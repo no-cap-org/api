@@ -186,7 +186,7 @@ export class GroupController {
       return { data: completeGroupDetails };
     } catch (error) {
       response.status(500);
-      return { data: [] };
+      return { message: 'Could not retrieve groups', error: error };
     }
   }
 }
