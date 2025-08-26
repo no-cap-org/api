@@ -1,10 +1,12 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, Req, Res } from '@nestjs/common';
 import { UserService } from './user.service';
 import { SignUpUserDto } from './dto/SignUpUser.dto';
 import { Request, Response } from 'express';
 import { LoginUserDto } from './dto/LoginUser.dto';
 import { SessionService } from 'src/session/session.service';
 import { LogoutUserDto } from './dto/LogoutUser.dto';
+import { UpdateUserDto } from './dto/UpdateUser.dto';
+import mongoose from 'mongoose';
 @Controller('/user')
 export class UserController {
   constructor(
@@ -133,5 +135,26 @@ export class UserController {
     return response.status(200).send({
       message: 'User logged out successfully',
     });
+  }
+
+  @Put('/:userId/update')
+  async updateUser(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    @Body() body: UpdateUserDto,
+    @Param('userId') userId: string,
+  ) {
+    try {
+      await this.userService.updateUser(
+        new mongoose.Types.ObjectId(userId),
+        body,
+      );
+
+      response.status(200);
+      return { message: 'User updated successfully' };
+    } catch (error) {
+      response.status(500);
+      return { message: 'User update failed', error: error };
+    }
   }
 }

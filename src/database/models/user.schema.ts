@@ -24,6 +24,13 @@ export class User {
 
   @Prop({ required: true, unique: true })
   phoneNo: string;
+
+  @Prop({
+    required: false,
+    default:
+      'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+  })
+  profilePic: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
