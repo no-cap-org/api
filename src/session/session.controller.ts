@@ -35,7 +35,7 @@ export class SessionController {
 
     if (userInfo) {
       return response.status(200).send({
-        userId: sessionInfo.userId,
+        user: userInfo,
         email: userInfo?.email,
         sessionId: sessionId,
       });

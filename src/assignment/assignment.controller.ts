@@ -26,7 +26,7 @@ import { User } from 'src/database/models/user.schema';
 import { AssignmentDetails } from 'src/common/types/assignment';
 
 @Controller('/assignment')
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 export class AssignmentController {
   constructor(
     private readonly assignmentService: AssignmentService,
