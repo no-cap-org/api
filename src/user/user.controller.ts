@@ -20,16 +20,16 @@ export class UserController {
     @Res({ passthrough: true }) response: Response,
     @Body() userData: SignUpUserDto,
   ) {
-    const { password, token, ...user } = userData;
+    const { password, token, ...otherUserInfo } = userData;
 
-    const res = await this.userService.createUser(user);
-    if (!res) {
+    const user = await this.userService.createUser(otherUserInfo);
+    if (!user) {
       return response.status(500).send({
         message: 'User could not be created',
       });
     }
 
-    const session = await this.sessionService.createSession(res._id);
+    const session = await this.sessionService.createSession(user._id);
 
     response.cookie('sessionId', session.id, {
       expires: session.expiresAt,
@@ -41,7 +41,8 @@ export class UserController {
       message: 'User created successfully',
       sessionId: session._id.toString(),
       email: user.email,
-      userId: res._id,
+      user: user,
+      userId: user._id,
     });
   }
 
@@ -76,6 +77,7 @@ export class UserController {
       return response.status(200).send({
         message: 'User logged in successfully',
         sessionId: oldSession._id.toString(),
+        user: user,
         email: user.email,
         userId: user._id.toString(),
       });
@@ -93,6 +95,7 @@ export class UserController {
       return response.status(200).send({
         message: 'User logged in successfully',
         sessionId: newSession._id.toString(),
+        user: user,
         email: user.email,
         userId: user._id.toString(),
       });
